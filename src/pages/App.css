@@ -1,0 +1,30 @@
+.main {
+    background-color: #1f1f1f;
+    width: 100vw;
+    max-width: 480px;
+    height: 100vh;
+    padding: 12px 0px;
+}
+
+.ul {
+    width: 100vw;
+    max-width: 480px;
+    margin: 12px 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px;
+    overflow-x: auto;
+    padding-left: 12px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.li {
+    background-color: antiquewhite;
+    width: 60px;
+    height: 60px;
+    list-style-type: none;
+    border-radius: 100%;
+    flex-shrink: 0;
+}
