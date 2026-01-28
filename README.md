@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# 📸 Stories 24h - Local-First React App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Uma aplicação de Stories estilo Instagram que roda 100% no navegador, utilizando IndexedDB para persistência e Canvas API para compressão de imagens.
 
-Currently, two official plugins are available:
+![Project Screenshot](./public/screenshot.png)
+## 🚀 Sobre o Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este projeto foi desenvolvido como um desafio técnico focado em **Performance** e **Arquitetura Offline-First**. O objetivo era criar uma experiência de "Stories" onde os dados persistem mesmo após fechar o navegador, sem depender de um backend externo.
 
-## React Compiler
+O grande diferencial é o tratamento de dados pesados no Front-end:
+1.  **Compressão Inteligente:** Imagens de alta resolução são redimensionadas via `Canvas` antes de serem salvas.
+2.  **Persistência Binária:** Uso do `IndexedDB` para armazenar blobs de imagem, evitando o limite de 5MB do LocalStorage.
+3.  **Consultas Temporais:** Uso de índices (IDBKeyRange) para filtrar apenas stories das últimas 24h.
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+* **Core:** React (Vite) + TypeScript
+* **Database:** Native IndexedDB API (Sem bibliotecas externas)
+* **Performance:** Canvas API (Image Processing)
+* **Estilização:** CSS Modules / Custom CSS
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🧠 Desafios Técnicos Superados
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 1. "O Problema do Limite de Armazenamento"
+Salvar imagens em Base64 no `localStorage` trava o navegador rapidamente.
+**Solução:** Implementei uma camada de serviço (`storage.ts`) que gerencia transações no `IndexedDB`, permitindo armazenamento de megabytes de dados de forma assíncrona e segura.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 2. "Otimização de Imagens no Cliente"
+Uploads de câmeras modernas (4K+) pesam muito.
+**Solução:** Criei um utilitário (`imageUtils.ts`) que intercepta o arquivo, desenha em um `canvas` off-screen redimensionando para HD (1080x1920) mantendo o aspect ratio, e só então salva o binário comprimido.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ⚙️ Como Rodar
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+```bash
+# Clone o repositório
+git clone [https://github.com/SEU-USUARIO/stories-24h.git](https://github.com/SEU-USUARIO/stories-24h.git)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+# Instale as dependências
+npm install
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Rode o servidor local
+npm run dev
